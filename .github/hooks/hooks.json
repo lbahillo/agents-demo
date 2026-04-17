@@ -1,0 +1,30 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "powershell -ExecutionPolicy Bypass -File scripts/session-welcome.ps1",
+        "timeout": 10
+      }
+    ],
+    "PreToolUse": [
+      {
+        "type": "command",
+        "command": "powershell -ExecutionPolicy Bypass -File scripts/secret-scan.ps1",
+        "timeout": 15
+      }
+    ],
+    "PostToolUse": [
+      {
+        "type": "command",
+        "command": "powershell -ExecutionPolicy Bypass -File scripts/format-check.ps1",
+        "timeout": 30
+      },
+      {
+        "type": "command",
+        "command": "powershell -ExecutionPolicy Bypass -File scripts/test-runner.ps1",
+        "timeout": 60
+      }
+    ]
+  }
+}
