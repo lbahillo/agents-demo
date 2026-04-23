@@ -1,7 +1,5 @@
 ---
-description: "Verify the results of the Agent Customizations demo. Checks that all phases produced expected output."
-agent: "agent"
-model: "Claude Sonnet 4 (copilot)"
+description: "Verify the results of the Agent Customizations demo. Checks that all demo steps produced expected output."
 tools:
   - "codeSearch"
   - "readFile"
@@ -10,7 +8,7 @@ tools:
 
 # Demo Verification Checklist
 
-You are verifying the results of the `/run-demo` execution. Check each item and report pass/fail with details.
+You are verifying the results of the demo execution. Check each item and report pass/fail with details.
 
 ## Verification Format
 

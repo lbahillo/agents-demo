@@ -19,12 +19,9 @@ if ($ext -notin $codeExtensions) {
     exit 0
 }
 
-# Get the content being written
-$content = $toolInput.content
-if (-not $content) {
-    $content = $toolInput.newString
-}
-if (-not $content) {
+# Serialize entire tool input to catch secrets in any property
+$contentToScan = $toolInput | ConvertTo-Json -Depth 5 -Compress
+if (-not $contentToScan) {
     exit 0
 }
 
@@ -43,7 +40,7 @@ $patterns = @(
 $findings = @()
 
 foreach ($p in $patterns) {
-    if ($content -match $p.Pattern) {
+    if ($contentToScan -match $p.Pattern) {
         $findings += $p.Name
     }
 }

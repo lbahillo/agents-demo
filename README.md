@@ -133,33 +133,54 @@ A real-time analytics dashboard built with **Next.js 15** + **.NET 8** that demo
 
 ---
 
-## Demo Script
+## Demo Guide (Interactive)
 
-### Flow 1: Full Feature Lifecycle
-```
-1. Type: /new-feature Add a real-time alerts system with severity levels
-2. @architect explores the codebase and creates a design spec
-3. @architect hands off to @backend-dev (click the handoff button)
-4. @backend-dev uses api-scaffold skill → creates AlertsController, AlertsService, Alert model
-5. @backend-dev hands off to @frontend-dev
-6. @frontend-dev uses component-library skill → creates AlertsBanner component
-7. @frontend-dev hands off to @reviewer
-8. @reviewer checks against the review checklist
-```
+Run each step in VS Code Copilot Chat. Each step uses a **real agent** via the prompt's `agent:` field — no roleplay.
 
-### Flow 2: Secret Scan Block
-```
-1. Ask @backend-dev: "Add a quick test endpoint that calls OpenAI with key sk-test12345678901234567890123456789012345678901234"
-2. Watch the PreToolUse hook block the edit with "Potential secrets detected"
-3. It suggests using environment variables instead
-```
+### Step 1 — Architecture Design (`@architect`)
+Open the prompt picker and run **demo-1-design**.
+`@architect` explores the codebase (read-only), produces a technical spec, then offers **handoff buttons** to `@backend-dev` and `@frontend-dev`.
 
-### Flow 3: Quick Widget
+> **Shows:** Agents, Handoffs, Instructions (auto-applied), read-only tool restrictions
+
+### Step 2 — Backend Implementation (`@backend-dev`)
+Click the handoff button to `@backend-dev`, or manually invoke `@backend-dev` and paste the spec.
+The agent uses the **api-scaffold** skill to create `Alert` model, `AlertsService`, and `AlertsController`. It also registers DI in `Program.cs`.
+
+> **Shows:** Skills (api-scaffold), Instructions (dotnet + api-design auto-apply), PostToolUse hooks (format-check, test-runner)
+
+### Step 3 — Secret Scan Block (`@backend-dev`)
+Run **demo-3-secret-test**.
+`@backend-dev` tries to write a file with a hardcoded API key. The **PreToolUse hook** intercepts and blocks it.
+
+> **Shows:** Hooks (secret-scan.ps1 exits with code 2), the agent recovers and suggests environment variables
+
+### Step 4 — Frontend Implementation (`@frontend-dev`)
+Hand off to `@frontend-dev` or invoke directly. Ask it to build the `AlertsBanner` component and `/alerts` page, and update `api-client.ts`.
+The agent uses the **component-library** and **api-client** skills.
+
+> **Shows:** Skills (component-library, api-client), Instructions (nextjs auto-apply), agent-scoped PostToolUse hooks
+
+### Step 5 — E2E Tests (`@frontend-dev`)
+Run **demo-4-e2e**.
+`@frontend-dev` uses the **e2e-test** skill and **Playwright MCP** to create `alerts.spec.ts`.
+
+> **Shows:** Skills (e2e-test), MCP Servers (Playwright), Instructions (testing auto-apply)
+
+### Step 6 — Code Review (`@reviewer`)
+Run **demo-5-review**.
+`@reviewer` reviews all changes (read-only). If a PR exists, it uses **GitHub MCP** to leave review comments.
+
+> **Shows:** Agents (reviewer, read-only), MCP Servers (GitHub), Handoffs back to devs
+
+### Step 7 — Verify Results
+Run **verify-demo** to check all expected files exist and follow conventions.
+
+### Reset
+```powershell
+.\scripts\reset-demo.ps1
 ```
-1. Type: /dashboard-widget Show system uptime as a percentage with trend
-2. @frontend-dev creates the component following the design system
-3. PostToolUse hooks auto-format the code and look for tests
-```
+Restores the workspace to `demo-baseline` tag so you can run the demo again.
 
 ---
 
@@ -200,7 +221,12 @@ agents-demo/
 │   ├── prompts/
 │   │   ├── new-feature.prompt.md       # /new-feature slash command
 │   │   ├── dashboard-widget.prompt.md  # /dashboard-widget slash command
-│   │   └── api-endpoint.prompt.md      # /api-endpoint slash command
+│   │   ├── api-endpoint.prompt.md      # /api-endpoint slash command
+│   │   ├── demo-1-design.prompt.md     # Demo step 1 → @architect
+│   │   ├── demo-3-secret-test.prompt.md # Demo step 3 → @backend-dev
+│   │   ├── demo-4-e2e.prompt.md        # Demo step 4 → @frontend-dev
+│   │   ├── demo-5-review.prompt.md     # Demo step 5 → @reviewer
+│   │   └── verify-demo.prompt.md       # Post-demo verification
 │   └── hooks/
 │       └── hooks.json                  # Hook event configuration
 ├── .vscode/
