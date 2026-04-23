@@ -30,6 +30,7 @@ PulseBoard is a real-time analytics dashboard with a clear frontend/backend sepa
 This project is equipped with specialized AI agents, skills, and automated quality hooks.
 
 ### Available Agents
+- `@orchestrator` — Plans features and orchestrates implementation across agents. Does not write code.
 - `@architect` — Designs features and system architecture. Does not write code. Delegates to dev agents.
 - `@frontend-dev` — Implements Next.js UI features. Knows Tailwind, React Server Components, Playwright.
 - `@backend-dev` — Implements .NET API features. Knows EF Core, minimal APIs, controller patterns.
@@ -43,6 +44,7 @@ This project is equipped with specialized AI agents, skills, and automated quali
 - `api-client` — Generate typed TypeScript API client functions
 
 ### Available Prompts
+- `/demo` — Run the full agent customizations demo with automated planning and orchestration
 - `/new-feature` — Design and implement a complete feature (starts with architect)
 - `/dashboard-widget` — Create a new dashboard widget with chart and card
 - `/api-endpoint` — Create a new REST API endpoint with full stack support

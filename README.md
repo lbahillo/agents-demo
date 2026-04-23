@@ -62,10 +62,11 @@ A real-time analytics dashboard built with **Next.js 15** + **.NET 8** that demo
 
 ---
 
-### 🤖 Agents (4 agents)
+### 🤖 Agents (5 agents)
 
 | Agent | Role | Tools | Handoffs to |
 |-------|------|-------|-------------|
+| `@orchestrator` | Planner & Orchestrator | Read-only + memory + askQuestions | agent (via "Start Implementation" handoff) |
 | `@architect` | Solutions Architect | Read-only (codeSearch, readFile) | frontend-dev, backend-dev, reviewer |
 | `@frontend-dev` | Next.js Developer | Full access + Playwright MCP | reviewer, backend-dev |
 | `@backend-dev` | .NET Developer | Full access | reviewer, frontend-dev |
@@ -93,15 +94,16 @@ A real-time analytics dashboard built with **Next.js 15** + **.NET 8** that demo
 
 ---
 
-### ⚡ Prompts (3 slash commands)
+### ⚡ Prompts (4 slash commands)
 
 | Command | Routes to | Description |
 |---------|-----------|-------------|
+| `/demo` | `@orchestrator` | Full agent customizations demo with automated orchestration |
 | `/new-feature` | `@architect` | Full feature workflow: design → implement → review |
 | `/dashboard-widget` | `@frontend-dev` | Quick dashboard widget creation |
 | `/api-endpoint` | `@backend-dev` | Quick API endpoint creation |
 
-**What to show:** Type `/new-feature Add an alerts system` — it routes to `@architect` who designs the feature, then hands off to `@backend-dev` and `@frontend-dev` for implementation.
+**What to show:** Type `/demo` — it routes to `@orchestrator` who researches the codebase, presents a plan, and after approval orchestrates all specialized agents automatically.
 
 ---
 
@@ -133,54 +135,39 @@ A real-time analytics dashboard built with **Next.js 15** + **.NET 8** that demo
 
 ---
 
-## Demo Guide (Interactive)
+## Demo Guide
 
-Run each step in VS Code Copilot Chat. Each step uses a **real agent** via the prompt's `agent:` field — no roleplay.
+The entire demo runs from a **single entry point** with automated orchestration.
 
-### Step 1 — Architecture Design (`@architect`)
-Open the prompt picker and run **demo-1-design**.
-`@architect` explores the codebase (read-only), produces a technical spec, then offers **handoff buttons** to `@backend-dev` and `@frontend-dev`.
+### How to Run
 
-> **Shows:** Agents, Handoffs, Instructions (auto-applied), read-only tool restrictions
+1. Open the prompt picker in Copilot Chat and run **`/demo`**
+2. `@orchestrator` researches the codebase and presents a detailed plan
+3. Review the plan — the orchestrator will ask clarifying questions if needed
+4. Click **"Start Implementation"** to approve
+5. Watch as specialized agents are invoked automatically in sequence
 
-### Step 2 — Backend Implementation (`@backend-dev`)
-Click the handoff button to `@backend-dev`, or manually invoke `@backend-dev` and paste the spec.
-The agent uses the **api-scaffold** skill to create `Alert` model, `AlertsService`, and `AlertsController`. It also registers DI in `Program.cs`.
+### What You'll See
 
-> **Shows:** Skills (api-scaffold), Instructions (dotnet + api-design auto-apply), PostToolUse hooks (format-check, test-runner)
+After clicking "Start Implementation", the following happens automatically:
 
-### Step 3 — Secret Scan Block (`@backend-dev`)
-Run **demo-3-secret-test**.
-`@backend-dev` tries to write a file with a hardcoded API key. The **PreToolUse hook** intercepts and blocks it.
+| Phase | Agent | What Happens | Customizations Showcased |
+|-------|-------|--------------|-------------------------|
+| Backend | `@backend-dev` | Creates Alert model, service, controller, DI registration | **Skills** (api-scaffold), **Instructions** (dotnet + api-design), **Hooks** (format-check, test-runner) |
+| Secret Scan | `@backend-dev` | Tries to write a hardcoded API key — gets **blocked** | **Hooks** (secret-scan.ps1 PreToolUse, exit code 2) |
+| Frontend | `@frontend-dev` | Creates AlertsBanner, alerts page, updates api-client.ts | **Skills** (component-library, api-client), **Instructions** (nextjs), **Hooks** (format-check) |
+| E2E Tests | `@frontend-dev` | Writes Playwright tests for alerts feature | **Skills** (e2e-test), **MCP** (Playwright), **Instructions** (testing) |
+| Review | `@reviewer` | Reviews all changes, checks conventions | **Agents** (read-only), **MCP** (GitHub) |
 
-> **Shows:** Hooks (secret-scan.ps1 exits with code 2), the agent recovers and suggests environment variables
+All 6 customization types are demonstrated: **Instructions**, **Agents**, **Skills**, **Hooks**, **MCP Servers**, and **Prompts**.
 
-### Step 4 — Frontend Implementation (`@frontend-dev`)
-Hand off to `@frontend-dev` or invoke directly. Ask it to build the `AlertsBanner` component and `/alerts` page, and update `api-client.ts`.
-The agent uses the **component-library** and **api-client** skills.
+### Verify & Reset
 
-> **Shows:** Skills (component-library, api-client), Instructions (nextjs auto-apply), agent-scoped PostToolUse hooks
-
-### Step 5 — E2E Tests (`@frontend-dev`)
-Run **demo-4-e2e**.
-`@frontend-dev` uses the **e2e-test** skill and **Playwright MCP** to create `alerts.spec.ts`.
-
-> **Shows:** Skills (e2e-test), MCP Servers (Playwright), Instructions (testing auto-apply)
-
-### Step 6 — Code Review (`@reviewer`)
-Run **demo-5-review**.
-`@reviewer` reviews all changes (read-only). If a PR exists, it uses **GitHub MCP** to leave review comments.
-
-> **Shows:** Agents (reviewer, read-only), MCP Servers (GitHub), Handoffs back to devs
-
-### Step 7 — Verify Results
-Run **verify-demo** to check all expected files exist and follow conventions.
-
-### Reset
 ```powershell
+# Run verify-demo prompt to check all expected files exist
+# Then reset the workspace for another run:
 .\scripts\reset-demo.ps1
 ```
-Restores the workspace to `demo-baseline` tag so you can run the demo again.
 
 ---
 
@@ -196,10 +183,11 @@ agents-demo/
 │   │   ├── testing.instructions.md      # Testing standards (auto-applies to *.test.*)
 │   │   └── api-design.instructions.md   # API design (auto-applies to Controllers/)
 │   ├── agents/
-│   │   ├── architect.agent.md           # Solutions Architect (read-only, designs)
-│   │   ├── frontend-dev.agent.md        # Frontend Developer (Next.js, Playwright)
-│   │   ├── backend-dev.agent.md         # Backend Developer (.NET, EF Core)
-│   │   └── reviewer.agent.md            # Code Reviewer (GitHub MCP)
+│   │   ├── orchestrator.agent.md     # Planner & Orchestrator (read-only, plans)
+│   │   ├── architect.agent.md          # Solutions Architect (read-only, designs)
+│   │   ├── frontend-dev.agent.md       # Frontend Developer (Next.js, Playwright)
+│   │   ├── backend-dev.agent.md        # Backend Developer (.NET, EF Core)
+│   │   └── reviewer.agent.md           # Code Reviewer (GitHub MCP)
 │   ├── skills/
 │   │   ├── component-library/           # Next.js component creation
 │   │   │   ├── SKILL.md
@@ -219,13 +207,10 @@ agents-demo/
 │   │       ├── SKILL.md
 │   │       └── client-template.ts
 │   ├── prompts/
+│   │   ├── demo.prompt.md              # /demo — full orchestrated demo
 │   │   ├── new-feature.prompt.md       # /new-feature slash command
 │   │   ├── dashboard-widget.prompt.md  # /dashboard-widget slash command
 │   │   ├── api-endpoint.prompt.md      # /api-endpoint slash command
-│   │   ├── demo-1-design.prompt.md     # Demo step 1 → @architect
-│   │   ├── demo-3-secret-test.prompt.md # Demo step 3 → @backend-dev
-│   │   ├── demo-4-e2e.prompt.md        # Demo step 4 → @frontend-dev
-│   │   ├── demo-5-review.prompt.md     # Demo step 5 → @reviewer
 │   │   └── verify-demo.prompt.md       # Post-demo verification
 │   └── hooks/
 │       └── hooks.json                  # Hook event configuration
