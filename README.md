@@ -149,15 +149,16 @@ The entire demo runs from a **single entry point** with automated orchestration.
 
 ### What You'll See
 
-After clicking "Start Implementation", the following happens automatically:
+After clicking "Start Implementation", the following happens automatically with **live narration** for the audience:
 
 | Phase | Agent | What Happens | Customizations Showcased |
 |-------|-------|--------------|-------------------------|
-| Backend | `@backend-dev` | Creates Alert model, service, controller, DI registration | **Skills** (api-scaffold), **Instructions** (dotnet + api-design), **Hooks** (format-check, test-runner) |
-| Secret Scan | `@backend-dev` | Tries to write a hardcoded API key — gets **blocked** | **Hooks** (secret-scan.ps1 PreToolUse, exit code 2) |
-| Frontend | `@frontend-dev` | Creates AlertsBanner, alerts page, updates api-client.ts | **Skills** (component-library, api-client), **Instructions** (nextjs), **Hooks** (format-check) |
-| E2E Tests | `@frontend-dev` | Writes Playwright tests for alerts feature | **Skills** (e2e-test), **MCP** (Playwright), **Instructions** (testing) |
-| Review | `@reviewer` | Reviews all changes, checks conventions | **Agents** (read-only), **MCP** (GitHub) |
+| 1. Backend API | `@backend-dev` | Creates Alert model, service, controller, DI registration | **Skills** (api-scaffold), **Instructions** (dotnet + api-design auto-apply), **Hooks** (format-check + test-runner fire after every write) |
+| 2. Secret Scan | `@backend-dev` | Tries to write a hardcoded API key — hook **BLOCKS** the edit, then fixes with IConfiguration | **Hooks** (secret-scan.ps1 PreToolUse, exit code 2 — the highlight moment) |
+| 3. Frontend Components | `@frontend-dev` | Creates AlertsBanner, updates api-client.ts, integrates into dashboard + navigation | **Skills** (component-library, api-client), **Instructions** (nextjs auto-apply), **Hooks** (format-check) |
+| 4. Alerts Page | `@frontend-dev` | Creates full /alerts CRUD management page with form and delete | **Skills** (component-library), **Instructions** (nextjs), data-testid prep for E2E |
+| 5. E2E Tests | `@frontend-dev` | Writes Playwright E2E tests using data-testid selectors | **Skills** (e2e-test), **MCP** (Playwright), **Instructions** (testing auto-apply) |
+| 6. Code Review | `@reviewer` | Reviews all changes against checklist, verifies no secrets remain | **Agents** (read-only reviewer), **MCP** (GitHub available) |
 
 All 6 customization types are demonstrated: **Instructions**, **Agents**, **Skills**, **Hooks**, **MCP Servers**, and **Prompts**.
 

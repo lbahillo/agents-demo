@@ -31,8 +31,8 @@ Welcome to PulseBoard! Project status:
 - Backend: $backendFiles files (.NET 8 Web API)
 - $gitStatus
 
-Available AI team: @architect (design), @frontend-dev (UI), @backend-dev (API), @reviewer (code review)
-Quick start prompts: /new-feature, /dashboard-widget, /api-endpoint
+Available AI team: @orchestrator (planning), @architect (design), @frontend-dev (UI), @backend-dev (API), @reviewer (code review)
+Run /demo to start the full Agent Customizations showcase, or try /new-feature, /dashboard-widget, /api-endpoint
 "@
 
 $result = @{
