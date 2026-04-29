@@ -1,9 +1,9 @@
 # format-check.ps1 - Post-edit hook that auto-formats code
 # Runs after successful file edits to enforce consistent style
 
-$input = [Console]::In.ReadToEnd() | ConvertFrom-Json
+$hookInput = [Console]::In.ReadToEnd() | ConvertFrom-Json
 
-$toolInput = $input.toolInput
+$toolInput = $hookInput.tool_input
 
 if (-not $toolInput.filePath) {
     exit 0
@@ -19,7 +19,7 @@ switch ($ext) {
     { $_ -in '.ts', '.tsx', '.js', '.jsx', '.css', '.json' } {
         # Format with Prettier
         $prettierPath = Join-Path (Split-Path $filePath -Parent) "node_modules/.bin/prettier"
-        $projectRoot = $input.cwd
+        $projectRoot = $hookInput.cwd
 
         if (Test-Path (Join-Path $projectRoot "node_modules/.bin/prettier.cmd")) {
             $prettierCmd = Join-Path $projectRoot "node_modules/.bin/prettier.cmd"
@@ -36,7 +36,7 @@ switch ($ext) {
     '.cs' {
         # Format with dotnet format
         if (Get-Command dotnet -ErrorAction SilentlyContinue) {
-            $projectRoot = $input.cwd
+            $projectRoot = $hookInput.cwd
             $slnFiles = Get-ChildItem -Path $projectRoot -Filter "*.sln" -Recurse -Depth 2
             $csprojFiles = Get-ChildItem -Path $projectRoot -Filter "*.csproj" -Recurse -Depth 3
 

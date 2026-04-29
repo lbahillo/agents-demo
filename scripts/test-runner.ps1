@@ -1,9 +1,9 @@
 # test-runner.ps1 - Post-edit hook that runs relevant tests after code changes
 # Identifies affected test files and runs them
 
-$input = [Console]::In.ReadToEnd() | ConvertFrom-Json
+$hookInput = [Console]::In.ReadToEnd() | ConvertFrom-Json
 
-$toolInput = $input.toolInput
+$toolInput = $hookInput.tool_input
 
 if (-not $toolInput.filePath) {
     exit 0
@@ -11,7 +11,7 @@ if (-not $toolInput.filePath) {
 
 $filePath = $toolInput.filePath
 $ext = [System.IO.Path]::GetExtension($filePath)
-$projectRoot = $input.cwd
+$projectRoot = $hookInput.cwd
 
 # Skip if the edited file is not a code file
 $codeExtensions = @('.ts', '.tsx', '.js', '.jsx', '.cs')
