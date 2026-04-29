@@ -48,6 +48,7 @@ This project is equipped with specialized AI agents, skills, and automated quali
 - `/new-feature` — Design and implement a complete feature (starts with architect)
 - `/dashboard-widget` — Create a new dashboard widget with chart and card
 - `/api-endpoint` — Create a new REST API endpoint with full stack support
+- `/verify-demo` — Verify the results of a demo run against the expected checklist
 
 ## Quality Automation
 

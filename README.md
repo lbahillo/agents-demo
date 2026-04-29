@@ -9,39 +9,37 @@ A real-time analytics dashboard built with **Next.js 15** + **.NET 8** that demo
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                        PulseBoard Workspace                             │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   INSTRUCTIONS        AGENTS            SKILLS          PROMPTS         │
-│   ┌───────────┐     ┌───────────┐     ┌──────────┐   ┌──────────┐     │
-│   │ Global     │     │@architect │     │component │   │/new-     │     │
-│   │ .NET       │     │@frontend  │────▶│-library  │   │ feature  │     │
-│   │ Next.js    │     │@backend   │────▶│api-      │   │/dashboard│     │
-│   │ Testing    │     │@reviewer  │     │ scaffold │   │ -widget  │     │
-│   │ API Design │     │           │     │e2e-test  │   │/api-     │     │
-│   └───────────┘     └─────┬─────┘     │db-migrate│   │ endpoint │     │
-│         │                 │           │api-client│   └──────────┘     │
-│         ▼                 │           └──────────┘                     │
-│   Auto-apply by          │                                             │
-│   file glob pattern       ▼                                             │
-│                     ┌───────────┐     ┌──────────┐                     │
-│                     │ HANDOFFS  │     │MCP SERVER│                     │
-│                     │           │     │          │                     │
-│                     │ architect │     │ GitHub   │◀── @reviewer        │
-│                     │  ──▶ devs │     │Playwright│◀── @frontend-dev   │
-│                     │ devs ──▶  │     │          │                     │
-│                     │  reviewer │     └──────────┘                     │
-│                     └───────────┘                                       │
-│                                                                         │
-│   HOOKS (Automated Quality Gates)                                       │
-│   ┌─────────────────────────────────────────────────────────────┐       │
-│   │ SessionStart ──▶ session-welcome.ps1 (project status)       │       │
-│   │ PreToolUse   ──▶ secret-scan.ps1     (blocks secrets)       │       │
-│   │ PostToolUse  ──▶ format-check.ps1    (auto-format)          │       │
-│   │ PostToolUse  ──▶ test-runner.ps1     (auto-test)            │       │
-│   └─────────────────────────────────────────────────────────────┘       │
-└─────────────────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────────────────────────┐
+│                              PulseBoard Workspace                                 │
+├───────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                   │
+│  INSTRUCTIONS (5)      AGENTS (5)          SKILLS (5)        PROMPTS (5)          │
+│  ┌───────────────┐   ┌────────────────┐   ┌───────────────┐  ┌────────────────┐  │
+│  │ Global         │   │ @orchestrator  │   │ component-lib │  │ /demo          │  │
+│  │ .NET           │   │ @architect    ─┼──▶│ api-scaffold  │  │ /new-feature   │  │
+│  │ Next.js        │   │ @frontend-dev ─┼──▶│ e2e-test      │  │ /dashboard-wdg │  │
+│  │ Testing        │   │ @backend-dev   │   │ db-migration  │  │ /api-endpoint  │  │
+│  │ API Design     │   │ @reviewer      │   │ api-client    │  │ /verify-demo   │  │
+│  └───────┬───────┘   └───────┬────────┘   └───────────────┘  └────────────────┘  │
+│          │                   │                                                    │
+│          ▼                   ▼                                                    │
+│  Auto-apply by         ┌──────────────┐    ┌──────────────┐                      │
+│  file glob pattern     │  HANDOFFS    │    │ MCP SERVERS  │                      │
+│                        │              │    │              │                      │
+│                        │ architect    │    │ GitHub       │◀── @reviewer         │
+│                        │   ──▶ devs   │    │ Playwright   │◀── @frontend-dev    │
+│                        │ devs ──▶     │    │              │                      │
+│                        │   reviewer   │    └──────────────┘                      │
+│                        └──────────────┘                                           │
+│                                                                                   │
+│  HOOKS (4 Automated Quality Gates)                                                │
+│  ┌───────────────────────────────────────────────────────────────────────────┐    │
+│  │ SessionStart  ──▶  session-welcome.ps1   (project status)                 │    │
+│  │ PreToolUse    ──▶  secret-scan.ps1       (BLOCKS secrets)                 │    │
+│  │ PostToolUse   ──▶  format-check.ps1      (auto-format)                   │    │
+│  │ PostToolUse   ──▶  test-runner.ps1       (auto-test)                     │    │
+│  └───────────────────────────────────────────────────────────────────────────┘    │
+└───────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -94,7 +92,7 @@ A real-time analytics dashboard built with **Next.js 15** + **.NET 8** that demo
 
 ---
 
-### ⚡ Prompts (4 slash commands)
+### ⚡ Prompts (5 slash commands)
 
 | Command | Routes to | Description |
 |---------|-----------|-------------|
@@ -102,6 +100,7 @@ A real-time analytics dashboard built with **Next.js 15** + **.NET 8** that demo
 | `/new-feature` | `@architect` | Full feature workflow: design → implement → review |
 | `/dashboard-widget` | `@frontend-dev` | Quick dashboard widget creation |
 | `/api-endpoint` | `@backend-dev` | Quick API endpoint creation |
+| `/verify-demo` | Agent | Post-demo verification against the expected checklist |
 
 **What to show:** Type `/demo` — it routes to `@orchestrator` who researches the codebase, presents a plan, and after approval orchestrates all specialized agents automatically.
 
@@ -209,10 +208,10 @@ agents-demo/
 │   │       └── client-template.ts
 │   ├── prompts/
 │   │   ├── demo.prompt.md              # /demo — full orchestrated demo
+│   │   ├── verify-demo.prompt.md       # /verify-demo — post-demo verification
 │   │   ├── new-feature.prompt.md       # /new-feature slash command
 │   │   ├── dashboard-widget.prompt.md  # /dashboard-widget slash command
-│   │   ├── api-endpoint.prompt.md      # /api-endpoint slash command
-│   │   └── verify-demo.prompt.md       # Post-demo verification
+│   │   └── api-endpoint.prompt.md      # /api-endpoint slash command
 │   └── hooks/
 │       └── hooks.json                  # Hook event configuration
 ├── .vscode/

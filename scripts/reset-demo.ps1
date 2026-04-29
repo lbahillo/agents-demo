@@ -38,7 +38,7 @@ git clean -fd
 
 Write-Host ""
 Write-Host "[OK] Workspace reset to demo-baseline." -ForegroundColor Green
-Write-Host "     You can now run /run-demo again in a new Copilot session." -ForegroundColor Gray
+Write-Host "     You can now run /demo again in a new Copilot session." -ForegroundColor Gray
 Write-Host ""
 
 # Show file count to confirm

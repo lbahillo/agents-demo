@@ -166,35 +166,3 @@ TOTAL: X / 14 passed
 ```
 
 If any check fails, explain exactly what went wrong and what the expected result was.
-
----
-
-## Final Verdict
-
-Print a summary table:
-
-```
-╔══════════════════════════════════════════════════════════╗
-║            DEMO VERIFICATION RESULTS                     ║
-╠════╦══════════════════════════════════╦══════════════════╣
-║  # ║ Check                           ║ Result           ║
-╠════╬══════════════════════════════════╬══════════════════╣
-║  1 ║ Alert model                     ║ [PASS] / [FAIL]  ║
-║  2 ║ Alerts service                  ║ [PASS] / [FAIL]  ║
-║  3 ║ Alerts controller               ║ [PASS] / [FAIL]  ║
-║  4 ║ DI registration                 ║ [PASS] / [FAIL]  ║
-║  5 ║ API client updated              ║ [PASS] / [FAIL]  ║
-║  6 ║ AlertsBanner component          ║ [PASS] / [FAIL]  ║
-║  7 ║ Alerts page                     ║ [PASS] / [FAIL]  ║
-║  8 ║ Dashboard integration           ║ [PASS] / [FAIL]  ║
-║  9 ║ NotificationService (no secrets)║ [PASS] / [FAIL]  ║
-║ 10 ║ Alerts E2E test                 ║ [PASS] / [FAIL]  ║
-║ 11 ║ .NET conventions                ║ [PASS] / [FAIL]  ║
-║ 12 ║ Next.js conventions             ║ [PASS] / [FAIL]  ║
-║ 13 ║ API design conventions          ║ [PASS] / [FAIL]  ║
-╠════╬══════════════════════════════════╬══════════════════╣
-║    ║ TOTAL                           ║ X / 13 passed    ║
-╚════╩══════════════════════════════════╩══════════════════╝
-```
-
-If any check fails, explain exactly what went wrong and what the expected result was.
